@@ -16,33 +16,43 @@ class ChapterWriterCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     llm = LLM(
-        model="ollama/llama3.2:1b",
+        model="ollama/deepseek-r1:1.5b",
         base_url="http://localhost:11434"
     )
 
     @agent
     def topic_researcher(self) -> Agent:
-        return Agent(config=self.agents_config["topic_researcher"],
-                     llm=self.llm,
-                     tools=[SerperDevTool()])
+        return Agent(
+            config=self.agents_config["topic_researcher"],
+            llm=self.llm,
+            tools=[SerperDevTool()],
+        )
 
     @task
     def research_topic(self) -> Task:
-        return Task(config=self.tasks_config["research_topic"])
+        return Task(
+            config=self.tasks_config["research_topic"],
+        )
 
     @agent
     def writer(self) -> Agent:
-        return Agent(config=self.agents_config["writer"], llm=self.llm)
+        return Agent(
+            config=self.agents_config["writer"],
+            llm=self.llm,
+        )
 
     @task
     def write_chapter(self) -> Task:
-        return Task(config=self.tasks_config["write_chapter"],
-                    output_pydantic=Chapter)
+        return Task(
+            config=self.tasks_config["write_chapter"],
+            output_pydantic=Chapter,
+        )
 
     @crew
     def crew(self) -> Crew:
-
-        return Crew(agents=self.agents,
-                    tasks=self.tasks,
-                    process=Process.sequential,
-                    verbose=True)
+        return Crew(
+            agents=self.agents,
+            tasks=self.tasks,
+            process=Process.sequential,
+            verbose=True,
+        )

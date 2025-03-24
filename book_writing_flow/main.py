@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-import os
 import asyncio
 
 from pydantic import BaseModel
@@ -11,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class ChapterState(BaseModel):
+class Chapter(BaseModel):
     title: str = ""
     content: str = ""
 
@@ -20,7 +18,7 @@ class BookState(BaseModel):
     topic: str = "Astronomy in 2025"
     total_chapters: int = 0
     titles: list[str] = []
-    chapters: list[ChapterState] = []
+    chapters: list[Chapter] = []
 
 
 class BookFlow(Flow[BookState]):
@@ -48,7 +46,7 @@ class BookFlow(Flow[BookState]):
                 .kickoff(inputs={
                     "title": title,
                     "topic": self.state.topic,
-                    "chapters": [chapter.title for chapter in self.state.chapters]
+                    "chapters": self.state.titles,
                 })
             )
             return result.pydantic
@@ -75,11 +73,6 @@ class BookFlow(Flow[BookState]):
 def kickoff():
     book_flow = BookFlow()
     asyncio.run(book_flow.kickoff_async())
-
-
-def plot():
-    book_flow = BookFlow()
-    book_flow.plot()
 
 
 if __name__ == "__main__":

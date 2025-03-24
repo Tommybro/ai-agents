@@ -13,6 +13,7 @@ write_outline:
     Write a outline for a book about {topic}.
     Ensure the outline is engaging and adheres to
     what a good outline should be.
+    Ensure the number of chapters are less than or equal to 3.
   expected_output: >
     A beautifully crafted outline for a book
     about {topic} in the following format:

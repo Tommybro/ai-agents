@@ -12,5 +12,10 @@ write_chapter:
     Ensure the chapter is engaging and adheres to
     what a good chapter should be.
   expected_output: >
-    A beautifully crafted chapter about the topic {title}.
+    Respond in the following JSON format:
+
+    {
+      "title": "A compelling chapter title about {title}",
+      "content": "A beautifully written chapter about {title}, rich with detail and aligned with the insights provided."
+    }
   agent: writer
