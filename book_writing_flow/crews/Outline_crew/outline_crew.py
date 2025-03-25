@@ -17,7 +17,7 @@ class OutlineCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
     llm = LLM(
-        model="ollama/deepseek-r1:1.5b",
+        model="ollama/deepseek-r1:7b",
         base_url="http://localhost:11434"
     )
 
