@@ -1,5 +1,7 @@
+import base64
 import chainlit as cl
 import ollama
+
 
 @cl.on_chat_start
 async def start_chat():
@@ -22,24 +24,38 @@ async def start_chat():
 
     await msg.send()
 
-@cl.step(type="tool")
-async def tool(input_message, image=None):
 
+@cl.step(type="tool")
+async def tool(input_message, image_paths=None):
     interaction = cl.user_session.get("interaction")
 
-    if image:
-        interaction.append({"role": "user",
-                            "content": input_message,
-                            "images": image})
+    if image_paths:
+        images_b64 = []
+        for path in image_paths:
+            with open(path, "rb") as img_file:
+                encoded = base64.b64encode(img_file.read()).decode("utf-8")
+                images_b64.append(encoded)
+
+        interaction.append({
+            "role": "user",
+            "content": input_message,
+            "images": images_b64
+        })
     else:
-        interaction.append({"role": "user",
-                            "content": input_message})
+        interaction.append({
+            "role": "user",
+            "content": input_message
+        })
 
-    response = ollama.chat(model="llama3.2-vision",
-                           messages=interaction)
+    response = ollama.chat(
+        model="llama3.2-vision",
+        messages=interaction
+    )
 
-    interaction.append({"role": "assistant",
-                        "content": response.message.content})
+    interaction.append({
+        "role": "assistant",
+        "content": response.message.content
+    })
 
     return response
 
